@@ -1,0 +1,25 @@
+<md-toolbar class="primary">
+  <div class="md-toolbar-tools">
+    <md-button hide-gt-sm class="md-icon-button" aria-label="Settings" ng-click="openLeftMenu()">
+      <md-icon md-svg-icon="Client/app/resources/images/icons/svg/menu.svg"></md-icon>
+    </md-button>
+
+    <md-button aria-label="Home" ng-click="home()">
+    <b>My Home</b>
+    </md-button>
+
+    <div flex>
+      <span></span>
+    </div>
+
+    <md-button class="md-icon-button ng-hide" ng-show="showDash" ng-click="showDashboard()" aria-label="Dashboard" >
+        <md-icon md-svg-src="Client/app/resources/images/icons/svg/insert_chart.svg"></md-icon>
+    </md-button>
+    <md-button class="md-icon-button ng-hide" ng-show="showAlert" aria-label="Home">
+        <md-icon md-svg-src="Client/app/resources/images/icons/svg/add_alert.svg"></md-icon>
+    </md-button>
+    <md-button class="md-icon-button" aria-label="Messages">
+        <md-icon md-svg-src="Client/app/resources/images/icons/svg/more_vert.svg"></md-icon>
+    </md-button>
+  </div>
+</md-toolbar>

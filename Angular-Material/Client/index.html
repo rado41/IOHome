@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en" >
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <!-- Angular Material style sheet -->
+  <link rel="stylesheet" href="node_modules\angular-material\angular-material.min.css">
+  <link rel="stylesheet" href="Client\app\css\custom.css">
+  <style>
+    /*.toolbardemoBasicUsage md-toolbar md-icon.md-default-theme {
+      color: white;
+    }*/
+    /*body {
+      height: 100%;
+    }*/
+  </style>
+</head>
+<body>
+    <div ng-app="iohome" ng-controller="AppCtrl" ng-cloak
+         layout-fill flex layout="column">
+      <div ng-include="'Client/app/views/partials/header.html'"></div>
+      <div layout="row" layout-fill flex>
+        <div ng-include="'Client/app/views/partials/sidenav.html'" layout="vertical"></div>
+        <div id="view" layout-fill flex ng-view></div>
+      </div>
+    </div>
+  <!-- Angular Material requires Angular.js Libraries -->
+  <script src="node_modules\angular\angular.min.js"></script>
+  <script src="node_modules\angular-animate\angular-animate.min.js"></script>
+  <script src="node_modules\angular-aria\angular-aria.min.js"></script>
+  <script src="node_modules\angular-route\angular-route.min.js"></script>
+  <script src="node_modules\angular-resource\angular-resource.js"></script>
+
+  <!-- Angular Material Library -->
+  <script src="node_modules\angular-material\angular-material.min.js"></script>
+
+  <!-- Other libraries -->
+  <script src="node_modules/chart.js/dist/Chart.min.js"></script>
+  <script src="node_modules/angular-chart.js/dist/angular-chart.min.js"></script>
+
+  <!-- Your application bootstrap  -->
+  <script src="Client\app\app.js"></script>
+  <script src="Client\app\controllers\home.js"></script>
+  <script src="Client\app\controllers\dashboard.js"></script>
+
+</body>
+</html>
+
+<!--
+Copyright 2016 Google Inc. All Rights Reserved.
+Use of this source code is governed by an MIT-style license that can be in foundin the LICENSE file at http://material.angularjs.org/license.
+-->

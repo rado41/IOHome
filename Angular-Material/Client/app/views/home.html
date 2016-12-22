@@ -1,0 +1,52 @@
+<md-content layout-fill flex>
+  <div ng-if="nodata" layout="column" layout-align="center center">
+    <div>
+      <h4 class="md-title">Oh Oh! No devices are online</h4>
+      <p>Scanning in progress to detect the devices</p>
+    </div>
+    <div>
+      <md-progress-circular md-mode="indeterminate" value="nodata"></md-progress-circular>
+    </div>
+  </div>
+
+  <md-tabs ng-if="!nodata" layout-fill md-selected="selectedIndex" class="md-dense" md-center-tabs md-stretch-tabs>
+    <md-tab ng-repeat="tab in tabs"
+            ng-disabled="tab.disabled"
+            label="{{tab.title}}">
+      <md-content>
+        <md-list ng-cloak>
+            <md-list-item ng-repeat="port in tab.ports">
+                <p> {{ port.name }} </p>
+                <md-switch class="md-secondary" ng-model="port.status"
+                           ng-change="togglePort(tab.id,port.portId)">
+                </md-switch>
+                <md-button class="md-secondary md-icon-button" aria-label="Messages"
+                           ng-click="editPort(tab.id,port.portId)">
+                    <md-icon md-svg-src="Client/app/resources/images/icons/svg/more_vert.svg"></md-icon>
+                </md-button>
+                <md-divider></md-divider>
+            </md-list-item>
+          </div>
+        </md-list>
+      </md-content>
+
+      <md-fab-speed-dial class="md-fab md-primary md-scale md-fab-bottom-right"
+            md-open="isOpen" md-direction="left">
+        <md-fab-trigger>
+          <md-button aria-label="Menu" class="md-fab md-warn">
+            <md-tooltip md-direction="top" md-visible="tooltipVisible">Menu</md-tooltip>
+            <md-icon md-svg-src="Client/app/resources/images/icons/svg/menu.svg"></md-icon>
+          </md-button>
+        </md-fab-trigger>
+
+        <md-fab-actions>
+          <md-button ng-if="tab.ports.length < tab.maxPorts" aria-label="Add new Port" class="md-fab md-raised md-mini"
+                     ng-click="addNewPort(tab.id)">
+            <md-tooltip md-direction="top" md-autohide="false">Add New Port</md-tooltip>
+            <md-icon md-svg-src="Client\app\resources\images\icons\svg\add.svg" aria-label="Add"></md-icon>
+          </md-button>
+        </md-fab-actions>
+      </md-fab-speed-dial>
+    </md-tab>
+  </md-tabs>
+</md-content>

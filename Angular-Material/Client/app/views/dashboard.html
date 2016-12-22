@@ -1,0 +1,14 @@
+<md-content layout-fill flex>
+  <md-tabs layout-fill md-selected="selectedIndex" class="md-dense" md-center-tabs md-stretch-tabs>
+    <md-tab ng-repeat="tab in tabs"
+            ng-disabled="tab.disabled"
+            label="{{tab.title}}">
+      <md-content>
+        <canvas id="line" class="chart chart-line" chart-data="data"
+          chart-labels="labels" chart-series="series" chart-options="options"
+          chart-dataset-override="datasetOverride" chart-click="onClick">
+        </canvas
+      </md-content>
+    </md-tab>
+  </md-tabs>
+</md-content>

@@ -1,0 +1,46 @@
+<md-dialog aria-label="Add New Port" class="md-dialog-custom">
+  <md-toolbar class="md-raised md-warn">
+    <div class="md-toolbar-tools">
+      <h2 flex="flex">Edit Port in {{name}}</h2>
+      <md-button class="md-icon-button" aria-label="Messages" ng-click="delete()">
+          <md-icon md-svg-src="Client/app/resources/images/icons/svg/close.svg"></md-icon>
+      </md-button>
+      <md-button class="md-icon-button" aria-label="Messages" ng-click="save()">
+          <md-icon md-svg-src="Client/app/resources/images/icons/svg/done.svg"></md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content>
+    <md-content layout-padding>
+      <div>
+        <form name="userForm">
+          <div layout-gt-sm="row">
+            <md-input-container class="md-block" flex-gt-sm>
+              <label>Port Number</label>
+              <md-select ng-model="portNo">
+                <md-option ng-repeat="port in ports" value="{{port}}"
+                           ng-selected="portNo">
+                  {{port}}
+                </md-option>
+              </md-select>
+            </md-input-container>
+
+            <md-input-container class="md-block" flex-gt-sm>
+              <label>Port Name</label>
+              <input ng-model="portName">
+            </md-input-container>
+          </div>
+
+          <md-input-container class="md-block">
+            <label>Description</label>
+            <textarea ng-model="portDescription" md-maxlength="150" rows="1" md-select-on-focus></textarea>
+          </md-input-container>
+
+        </form>
+      </div>
+    </md-content>
+    <div>
+      <span flex></span>
+    </div>
+  </md-dialog-content>
+</md-dialog>
