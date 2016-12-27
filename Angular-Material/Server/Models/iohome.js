@@ -31,6 +31,7 @@ var globalSchema = new Schema({
 
 var nodeSchema = new Schema({
   rId: Number,
+  ip: String,
 });
 
 var iohome = {};

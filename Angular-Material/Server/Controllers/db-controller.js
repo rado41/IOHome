@@ -1,6 +1,12 @@
 var IOhome = require('../Models/iohome');
 
-module.exports.addRoom = function (req, res) {
+module.exports.nodeUpdate = function (info, cb) {
+  IOhome.nodes.update(
+    {rId: info.rId},
+    { rId : info.rId , ip : rId.ip },
+    { upsert : true },
+    cb
+  );
 }
 
 module.exports.editRoom = function (req, res) {

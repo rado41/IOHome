@@ -2,11 +2,13 @@ var express           = require('express'),
     app               = express(),
     bodyParser        = require('body-parser'),
     mongoose          = require('mongoose'),
+    child_process     = require('child_process'),
     approuter         = require('./approuter');
 
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var dbController = require('./Server/Controllers/db-controller.js')
+var dbController = require('./Server/Controllers/db-controller.js');
+var mdnsHandler = child_process.fork(`${__dirname}/mdnsHandler.js`);
 
 app.use('/Client', express.static(__dirname + '/Client'));
 app.use('/Server', express.static(__dirname + '/Server'));
@@ -16,6 +18,15 @@ mongoose.connect("mongodb://localhost/iohome");
 
 //All routing are done in this file
 app.use(approuter);
+
+//MDNS Updates are sent to us by mdnsHandler
+// info: { rId: Node ID/Room ID,
+//         ip: NodeIP address }
+mdnsHandler.on('message',function(info) {
+  dbController.nodeUpdate(info,function(err,result){
+    console.log("MDNS Update: "+ info);
+  });
+});
 
 io.on('connection', function(socket){
 
@@ -55,10 +66,6 @@ io.on('connection', function(socket){
   });
 
 });
-
-// app.listen(80, function () {
-//   console.log('Example app listening on port 80! Click on http://127.0.0.1/')
-// });
 
 http.listen(80, function(){
   console.log('listening on *:80');
