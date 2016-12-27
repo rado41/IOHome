@@ -1,12 +1,17 @@
-app.controller("dashboardCtrl",["$scope","ioHomeService",function($scope,ioHome){
-  $scope.data = ioHome.getRooms();
-  $scope.selectedIndex = 0;
-  $scope.tabs = [];
-
-  $scope.data.rooms.forEach(function(room,index){
-    $scope.tabs.push({title: room.name, id: room.id, ports: room.ports});
-  });
-
+app.controller("dashboardCtrl",["$scope","ioHomeService",
+function($scope,ioHome) {
+  // // $scope.data = ioHome.getRooms();
+  // var socketio = io();
+  // socketio.on('home', function(result){
+	// 	$scope.data = result;
+	// 	if($scope.data) {
+	// 		$scope.tabs = [];
+	// 		$scope.data.rooms.forEach(function(room,index){
+	// 			$scope.tabs.push({title: room.name, id: room.id, maxPorts : room.maxPorts, ports: room.ports});
+	// 		});
+	// 	}
+  // });
+  $scope.tabs = ioHome.tabs;
 
   $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
   $scope.series = ['Series A', 'Series B'];

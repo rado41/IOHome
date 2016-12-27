@@ -1,13 +1,9 @@
 'use strict';
 
-/* Services */
-// var socketio = io();
-// socketio.on('home', function(msg){
-//     console.log(msg);
-// });
-// Demonstrate how to register services
-// In this case it is a simple value service.
-// app.factory('socket', function ($rootScope) {
+// // Demonstrate how to register services
+// // In this case it is a simple value service.
+// var socket = io();
+// app.factory('socketwrapper', function ($rootScope) {
 //   // var socket = io.connect();
 //   return {
 //     on: function (eventName, callback) {

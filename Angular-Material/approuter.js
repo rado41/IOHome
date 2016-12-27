@@ -6,7 +6,6 @@ router.get('/', function (req, res) {
   res.sendFile(__dirname + '/Client/index.html');
 });
 
-
-router.get('/home/getAll', dbController.getAll);
+router.get('/home', dbController.getAll);
 
 module.exports = router;

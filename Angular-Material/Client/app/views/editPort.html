@@ -2,10 +2,12 @@
   <md-toolbar class="md-raised md-warn">
     <div class="md-toolbar-tools">
       <h2 flex="flex">Edit Port in {{name}}</h2>
-      <md-button class="md-icon-button" aria-label="Messages" ng-click="delete()">
+      <md-button class="md-icon-button" aria-label="Delete this port" ng-click="delete()">
+          <md-tooltip md-direction="top" md-autohide="false">Delete port</md-tooltip>
           <md-icon md-svg-src="Client/app/resources/images/icons/svg/close.svg"></md-icon>
       </md-button>
-      <md-button class="md-icon-button" aria-label="Messages" ng-click="save()">
+      <md-button class="md-icon-button" aria-label="Save port" ng-click="save()">
+          <md-tooltip md-direction="top" md-autohide="false">Save port</md-tooltip>
           <md-icon md-svg-src="Client/app/resources/images/icons/svg/done.svg"></md-icon>
       </md-button>
     </div>
@@ -17,7 +19,7 @@
           <div layout-gt-sm="row">
             <md-input-container class="md-block" flex-gt-sm>
               <label>Port Number</label>
-              <md-select ng-model="portNo">
+              <md-select ng-model="newPortNo">
                 <md-option ng-repeat="port in ports" value="{{port}}"
                            ng-selected="portNo">
                   {{port}}

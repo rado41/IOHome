@@ -1,32 +1,27 @@
-app.controller("homeCtrl",["$scope","$mdDialog","ioHomeService",function($scope,$mdDialog,ioHome){
-	// $scope.nodata = true;
-	$scope.data = ioHome.getRooms();
+app.controller("homeCtrl",["$scope","$mdDialog","ioHomeService",
+function($scope,$mdDialog,ioHome){
 
-	// setTimeout(function(){
-	// 	$scope.nodata = false;
-	// 	$scope.data = ioHome.getRooms();
-	// 	console.log($scope.data);
-	// },5000);
+  $scope.dataready = ioHome.dataready;
 
-	$scope.selectedIndex = 1;
-	$scope.tabs = [];
+	$scope.selectedIndex = 0;
   $scope.isOpen = false;
   $scope.selectedMode = 'md-fling';
 	$scope.status = undefined;
 
-	if($scope.data) {
-		$scope.data.rooms.forEach(function(room,index){
-			$scope.tabs.push({title: room.name, id: room.id, maxPorts : room.maxPorts, ports: room.ports});
-		});
+	$scope.getTabs = function() {
+		$scope.dataready = ioHome.dataready;
+		if(ioHome.dataready) {
+			return ioHome.tabs;
+		}
 	}
 
-	$scope.togglePort = function(roomId,portId) {
-		ioHome.togglePort(roomId,portId);
+	$scope.togglePort = function(rId,pId,status) {
+		ioHome.togglePort(rId,pId,status);
 	}
 
-	$scope.addNewPort =  function(roomId) {
-		var roomName = ioHome.getRoomName(roomId);
-		var availablePorts = ioHome.getAvailePorts(roomId);
+	$scope.addNewPort =  function(rId) {
+		var roomName = ioHome.getRoomName(rId);
+		var availablePorts = ioHome.getAvailePorts(rId);
 
     $mdDialog.show({
       controller: DialogController,
@@ -36,23 +31,25 @@ app.controller("homeCtrl",["$scope","$mdDialog","ioHomeService",function($scope,
       clickOutsideToClose:true,
 			locals : {
 				data : {
-	      	roomId: roomId,
+	      	rId: rId,
 					roomName : roomName,
 					availablePorts : availablePorts,
 				}
       }
     })
-    .then(function(newPortInfo) {
-      	ioHome.addNewPort(roomId,newPortInfo);
+    .then(function(result) {
+			  console.log(result);
+      	ioHome.addNewPort(rId,result.info);
     }, function() {
       console.log('You cancelled the dialog.');
     });
   };
 
-	$scope.editPort =  function(roomId,portId) {
-		var roomName = ioHome.getRoomName(roomId);
-		var availablePorts = ioHome.getAvailePorts(roomId);
-		var portInfo = ioHome.getPortInfo(roomId,portId);
+	$scope.editPort =  function(rId,pId) {
+		console.log(rId + ":" +  pId);
+		var roomName = ioHome.getRoomName(rId);
+		var availablePorts = ioHome.getAvailePorts(rId);
+		var portInfo = ioHome.getPortInfo(rId,pId);
 
 		$mdDialog.show({
 			controller: DialogController,
@@ -62,7 +59,7 @@ app.controller("homeCtrl",["$scope","$mdDialog","ioHomeService",function($scope,
 			clickOutsideToClose:true,
 			locals : {
 				data : {
-					roomId: roomId,
+					rId: rId,
 					roomName : roomName,
 					availablePorts : availablePorts,
 					portInfo : portInfo,
@@ -72,9 +69,9 @@ app.controller("homeCtrl",["$scope","$mdDialog","ioHomeService",function($scope,
 		.then(function(result) {
 			console.log(result);
 			if(result.action === "delete") {
-				ioHome.deletePort(roomId,result.portId);
+				ioHome.deletePort(rId,result.info.pId);
 			} else if(result.action === "save") {
-				ioHome.updatePort(roomId,result);
+				ioHome.updatePort(rId,result.info);
 			}
 		}, function() {
 			console.log('You cancelled the dialog.');
@@ -84,11 +81,13 @@ app.controller("homeCtrl",["$scope","$mdDialog","ioHomeService",function($scope,
 	function DialogController($scope, $mdDialog,data) {
 		$scope.name = data.roomName;
 		$scope.ports = data.availablePorts;
+    $scope.newPortNo;
 		if(data.portInfo) {
 			$scope.portName = data.portInfo.name;
 			$scope.portNo = data.portInfo.anchorPort;
 			$scope.ports.push($scope.portNo);
-			$scope.portId = data.portInfo.portId;
+			$scope.pId = data.portInfo.pId;
+			$scope.status = data.portInfo.status;
 		}
 
 		$scope.hide = function() {
@@ -99,19 +98,32 @@ app.controller("homeCtrl",["$scope","$mdDialog","ioHomeService",function($scope,
 			$mdDialog.cancel();
 		};
 
+		$scope.create = function() {
+			var result = {};
+			result["action"] = "create";
+			result.info = {};
+			result.info["anchorPort"] = parseInt($scope.portNo);
+			result.info["name"] = $scope.portName;
+			result.info["status"] = false;
+			$mdDialog.hide(result);
+		};
+
 		$scope.save = function() {
 			var result = {};
 			result["action"] = "save";
-			result["anchorPort"] = $scope.portNo;
-			result["name"] = $scope.portName;
-			result["status"] = false;
+			result.info = {};
+			result.info["anchorPort"] = $scope.newPortNo;
+			result.info["name"] = parseInt($scope.portName);
+			result.info["status"] = $scope.status;
+			result.info["pId"] = parseInt($scope.pId);
 			$mdDialog.hide(result);
 		};
 
 		$scope.delete = function() {
 			var result = {};
 			result["action"] = "delete";
-			result["portId"] = $scope.portId;
+			result.info = {};
+			result.info["pId"] = parseInt($scope.pId);
 			$mdDialog.hide(result);
 		}
 

@@ -1,32 +1,44 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var scheduleSchama = new Schema({
+var scheduleSchema = new Schema({
   time: Date,
   schedevent: Object,
 });
 
 var portSchema = new Schema({
   name: String,
-  id: Number,
+  anchorPort: Number,
+  status: Boolean,
+  pId: Number,
   description: String,
-  // schedules = [scheduleSchema],
+  schedules: [scheduleSchema],
 });
 
 var roomSchema = new Schema({
   name:  String,
-  id: Number,
   ports: [portSchema],
+  rId: Number,
 });
 
 var homeSchema = new Schema({
-  name: String,
   rooms : [roomSchema],
 });
 
-var iohome = mongoose.model('iohome', homeSchema,"iohome");
+var globalSchema = new Schema({
+  globals: [{name: String, value: String}],
+});
+
+var nodeSchema = new Schema({
+  rId: Number,
+});
+
+var iohome = {};
+iohome.home      = mongoose.model('iohome', homeSchema,"iohome");
+iohome.rooms     = mongoose.model('room', roomSchema,"rooms");
+iohome.ports     = mongoose.model('port', portSchema,"ports");
+iohome.schedules = mongoose.model('schedule',scheduleSchema,"schedules");
+iohome.globals   = mongoose.model('global',globalSchema,"globals");
+iohome.nodes     = mongoose.model('node',nodeSchema,"nodes");
 
 module.exports = iohome;
-// var rooms = mongoose.model('room', roomSchema);
-// var ports = mongoose.model('port', portSchema);
-// var schedules = mongoose.model('schedule',scheduleSchama);
