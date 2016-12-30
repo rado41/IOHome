@@ -86,6 +86,7 @@ app.factory("ioHomeService", ["$rootScope", function($rootScope) {
 
   var socketio = io();
   socketio.on('home', function(result){
+    console.log(result);
   	if(result) {
       $rootScope.$apply(function() {
         svc.homeData = result;

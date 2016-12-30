@@ -21,12 +21,32 @@ app.use(approuter);
 
 //MDNS Updates are sent to us by mdnsHandler
 // info: { rId: Node ID/Room ID,
-//         ip: NodeIP address }
+//         ip: NodeIP address,
+//         maxPorts: Maximum ports supported}
 mdnsHandler.on('message',function(info) {
   dbController.nodeUpdate(info,function(err,result){
-    console.log("MDNS Update: "+ info);
+    if(!err) {
+      dbController.getRoom(info.rId, function(err,result){
+        if(!err) {
+          //If not already exists, add to rooms collection with ports set to []
+            info.ports = [];
+            dbController.addRoom(info,function(err,result){
+              dbController.getAll(function(err,results) {
+                var test = {};
+                test.rooms = results;
+                io.emit('home',test);
+              });
+            });
+        } else {
+          //If already exist, just change the max ports if it changed
+        }
+      });
+    }
   });
 });
+
+
+mdnsHandler.send({type: 'query'});
 
 io.on('connection', function(socket){
 

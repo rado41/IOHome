@@ -3,13 +3,25 @@ var IOhome = require('../Models/iohome');
 module.exports.nodeUpdate = function (info, cb) {
   IOhome.nodes.update(
     {rId: info.rId},
-    { rId : info.rId , ip : rId.ip },
+    { rId : info.rId , ip : info.ip },
     { upsert : true },
     cb
   );
 }
 
-module.exports.editRoom = function (req, res) {
+module.exports.addRoom = function (info, cb) {
+  console.log("Add Room: " );
+  console.log(info);
+  IOhome.rooms.update(
+    { rId: info.rId },
+    { rId : info.rId , maxPorts: info.maxPorts, ports: info.ports },
+    { upsert : true },
+    cb
+  );
+}
+
+module.exports.getRoom = function (roomId, cb) {
+  IOhome.rooms.findOne({rid: roomId},cb);
 }
 
 module.exports.addPort = function (info, cb) {
@@ -21,8 +33,7 @@ module.exports.addPort = function (info, cb) {
     },
     cb
   );
-
-}
+};
 
 module.exports.togglePort = function (info, cb) {
   IOhome.rooms.update(
@@ -45,7 +56,7 @@ module.exports.editPort = function (info, cb) {
     },
     cb
   );
-}
+};
 
 module.exports.delPort = function(info,cb) {
   IOhome.rooms.update(
@@ -58,13 +69,13 @@ module.exports.delPort = function(info,cb) {
     },
     cb
   );
-}
+};
 
 module.exports.addSchedule = function (req, res) {
-}
+};
 
 module.exports.editSchedule = function (req, res) {
-}
+};
 
 module.exports.getAll = function (cb) {
   // var test;
@@ -94,7 +105,7 @@ module.exports.getAll = function (cb) {
         results.forEach(function(result){
           nodeIds.push(result.rId);
         });
-        console.log(nodeIds);
+        
         IOhome.rooms.find(
           { rId: {
               $in: nodeIds,

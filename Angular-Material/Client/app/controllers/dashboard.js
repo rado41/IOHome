@@ -1,16 +1,5 @@
 app.controller("dashboardCtrl",["$scope","ioHomeService",
 function($scope,ioHome) {
-  // // $scope.data = ioHome.getRooms();
-  // var socketio = io();
-  // socketio.on('home', function(result){
-	// 	$scope.data = result;
-	// 	if($scope.data) {
-	// 		$scope.tabs = [];
-	// 		$scope.data.rooms.forEach(function(room,index){
-	// 			$scope.tabs.push({title: room.name, id: room.id, maxPorts : room.maxPorts, ports: room.ports});
-	// 		});
-	// 	}
-  // });
   $scope.tabs = ioHome.tabs;
 
   $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];

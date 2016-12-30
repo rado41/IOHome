@@ -17,6 +17,7 @@ var portSchema = new Schema({
 
 var roomSchema = new Schema({
   name:  String,
+  maxPorts: {type: Number, default: 8},
   ports: [portSchema],
   rId: Number,
 });
