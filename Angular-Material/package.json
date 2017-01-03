@@ -17,6 +17,7 @@
     "mdns-js": "^0.5.2",
     "mongoose": "^4.7.4",
     "multicast-dns": "^6.1.0",
+    "request": "^2.79.0",
     "socket.io": "^1.7.2"
   },
   "devDependencies": {},

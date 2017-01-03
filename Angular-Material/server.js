@@ -9,6 +9,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var dbController = require('./Server/Controllers/db-controller.js');
 var mdnsHandler = child_process.fork(`${__dirname}/mdnsHandler.js`);
+var clientHandler = require('./socketHandler');
 
 app.use('/Client', express.static(__dirname + '/Client'));
 app.use('/Server', express.static(__dirname + '/Server'));
@@ -57,9 +58,17 @@ io.on('connection', function(socket){
   });
 
   socket.on('toggleport',function(info){
-    dbController.togglePort(info,function(error,result) {
-      socket.broadcast.emit('portUpdate',info);
-    });
+    // TODO: Get IP Address from info.rId
+    // TODO: get anchorPort from info.pId
+    var ip = "192.168.1.9";
+    var port = 2;
+    clientHandler.updatePort(ip,port,info.status,
+      function(err,httpResponse,body) {
+        dbController.togglePort(info,function(error,result) {
+          socket.broadcast.emit('portUpdate',info);
+        });
+      }
+    )
   });
 
   socket.on('addport',function(info){
