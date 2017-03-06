@@ -59,5 +59,4 @@ process.on('message', function(info) {
   }
 });
 
-
 setInterval(mdnsQuery,3000);

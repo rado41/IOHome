@@ -1,5 +1,9 @@
 var IOhome = require('../Models/iohome');
 
+module.exports.clearNodes = function(cb) {
+  IOhome.nodes.remove({}, cb);
+}
+
 module.exports.nodeUpdate = function (info, cb) {
   IOhome.nodes.update(
     {rId: info.rId},
@@ -24,6 +28,16 @@ module.exports.getRoom = function (roomId, cb) {
   IOhome.rooms.findOne({rid: roomId},cb);
 }
 
+module.exports.getIp = function(roomId,cb) {
+	console.log("RoomId: " + roomId);
+	IOhome.nodes.find(
+		{rId: roomId},
+		{_id: 0, rId: 0},
+		cb
+	)
+};
+
+
 module.exports.addPort = function (info, cb) {
   IOhome.rooms.update(
     { rId: info.rId},
@@ -35,7 +49,17 @@ module.exports.addPort = function (info, cb) {
   );
 };
 
+module.exports.getPort = function(roomId,portId,cb) {
+	IOhome.rooms.findOne(
+		{rId: roomId, "ports.pId": portId},
+		{"ports.$.pId":1},
+		cb
+	);
+
+}
+
 module.exports.togglePort = function (info, cb) {
+	console.log(info);
   IOhome.rooms.update(
     { rId: info.rId, "ports.pId": info.pId},
     { $set : {"ports.$.status" : info.status } },

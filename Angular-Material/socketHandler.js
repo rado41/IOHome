@@ -3,7 +3,10 @@ var request = require('request');
 module.exports = {};
 
 module.exports.updatePort = function(ip,port,status,cb) {
-  var urlStr = "http://"+ip+"/update?port="+port+"&status="+status;
+	console.log("Client Handler: " + status);
+	var val = status?1:0;
+	var urlStr = "http://"+ip+"/update?port="+port+"&val="+val;
+	console.log(urlStr);
   request.post(
     {
       url:urlStr,

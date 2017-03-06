@@ -1,12 +1,12 @@
-var express           = require('express'),
-    app               = express(),
-    bodyParser        = require('body-parser'),
-    mongoose          = require('mongoose'),
-    child_process     = require('child_process'),
-    approuter         = require('./approuter');
+const express           = require('express'),
+     app               = express(),
+     bodyParser        = require('body-parser'),
+     mongoose          = require('mongoose'),
+     child_process     = require('child_process'),
+     approuter         = require('./approuter');
+		 http = require('http').Server(app);
+		 io = require('socket.io')(http);
 
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
 var dbController = require('./Server/Controllers/db-controller.js');
 var mdnsHandler = child_process.fork(`${__dirname}/mdnsHandler.js`);
 var clientHandler = require('./socketHandler');
@@ -19,6 +19,13 @@ mongoose.connect("mongodb://localhost/iohome");
 
 //All routing are done in this file
 app.use(approuter);
+
+//Clear Nodes to reflect actual existing nodes
+dbController.clearNodes(function(err,result) {
+	if(!err) {
+		console.log("Nodes are dropped");
+	}
+});
 
 //MDNS Updates are sent to us by mdnsHandler
 // info: { rId: Node ID/Room ID,
@@ -58,17 +65,29 @@ io.on('connection', function(socket){
   });
 
   socket.on('toggleport',function(info){
-    // TODO: Get IP Address from info.rId
-    // TODO: get anchorPort from info.pId
-    var ip = "192.168.1.9";
-    var port = 2;
-    clientHandler.updatePort(ip,port,info.status,
-      function(err,httpResponse,body) {
-        dbController.togglePort(info,function(error,result) {
-          socket.broadcast.emit('portUpdate',info);
-        });
-      }
-    )
+		dbController.getIp(info.rId,function(err,nodeInfo){
+		  if(!err) {
+				var ip = nodeInfo[0].ip;
+				dbController.getPort(info.rId,info.pId,function(err2,portInfo){
+					if(!err2) {
+						var port = portInfo.ports[0].anchorPort;
+						console.log("IP : " + ip + " Port: " + port + " Status: "+ info.status);
+						clientHandler.updatePort(ip,port,info.status,function(err,httpResponse,body) {
+		    			console.log(err);
+		    			//console.log(body);
+		    			//console.log(httpResponse);
+		    			dbController.togglePort(info,function(error,result) {
+		    			  socket.broadcast.emit('portUpdate',info);
+		    			});
+		    		});
+					} else {
+						console.log("no Port info");
+					}
+		  	});
+		  } else {
+				console.log("no IP");
+			}
+		});
   });
 
   socket.on('addport',function(info){
@@ -89,6 +108,10 @@ io.on('connection', function(socket){
       socket.broadcast.emit('delport',info);
     });
   });
+
+	socket.on('onboard', function() {
+		console.log("Onboard");
+	});
 
   socket.on('disconnect', function(){
     console.log('user disconnected');
